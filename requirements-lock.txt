@@ -42,7 +42,7 @@ phonemizer==3.4.0
 pillow==12.3.0
 pluggy==1.6.0
 protobuf==7.36.2
-pyarrow==25.0.1
+pyarrow==26.0.0
 pydantic==2.14.1
 pydantic_core==2.50.1
 pydeck==0.9.3

@@ -1,0 +1,5 @@
+#!/bin/sh
+# Installed into .git/hooks by setup.ps1: blocks commits that contain an AI key or .env.
+cd "$(git rev-parse --show-toplevel)" || exit 1
+if [ -x .venv/Scripts/python.exe ]; then PY=.venv/Scripts/python.exe; else PY=python; fi
+exec "$PY" scripts/check_secrets.py

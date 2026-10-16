@@ -1,0 +1,38 @@
+# Runs on every push and pull request: code checks, known-vulnerability scan, all tests.
+# Windows + Python 3.13 like the owner's PC. The voice/speech models are not downloaded here,
+# so the few tests that need them are skipped; FFmpeg is installed so video tests do run.
+name: tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements-*.txt
+      - name: Install FFmpeg
+        run: choco install ffmpeg -y --no-progress
+      - name: Install libraries (exact tested versions)
+        run: python -m pip install -r requirements-dev.txt
+      - name: No secrets in the code
+        run: python scripts/check_secrets.py --all
+      - name: Code checks (ruff)
+        run: python -m ruff check .
+      - name: Type checks (mypy)
+        run: python -m mypy studio
+      - name: Known vulnerabilities (pip-audit)
+        run: python -m pip_audit -r requirements-lock.txt --progress-spinner off
+      - name: Tests
+        run: python -m pytest -q -n auto

@@ -1,0 +1,948 @@
+{
+  "$defs": {
+    "Asset": {
+      "additionalProperties": false,
+      "properties": {
+        "asset_id": {
+          "minLength": 1,
+          "title": "Asset Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/AssetKind"
+        },
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "shot_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shot Id"
+        },
+        "provider": {
+          "default": "",
+          "title": "Provider",
+          "type": "string"
+        },
+        "cost_usd": {
+          "default": 0.0,
+          "minimum": 0,
+          "title": "Cost Usd",
+          "type": "number"
+        },
+        "license_note": {
+          "default": "",
+          "title": "License Note",
+          "type": "string"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "duration_sec": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration Sec"
+        },
+        "width": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Width"
+        },
+        "height": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Height"
+        },
+        "built_from": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Built From",
+          "type": "array"
+        }
+      },
+      "required": [
+        "asset_id",
+        "kind",
+        "path"
+      ],
+      "title": "Asset",
+      "type": "object"
+    },
+    "AssetKind": {
+      "enum": [
+        "image",
+        "video",
+        "voice",
+        "music",
+        "sfx",
+        "captions",
+        "final_video"
+      ],
+      "title": "AssetKind",
+      "type": "string"
+    },
+    "Category": {
+      "enum": [
+        "history",
+        "science",
+        "geography",
+        "inventions",
+        "technology",
+        "other"
+      ],
+      "title": "Category",
+      "type": "string"
+    },
+    "Claim": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": {
+          "minLength": 1,
+          "title": "Claim Id",
+          "type": "string"
+        },
+        "statement": {
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        },
+        "importance": {
+          "$ref": "#/$defs/Importance",
+          "default": "medium"
+        },
+        "source_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Ids",
+          "type": "array"
+        },
+        "status": {
+          "$ref": "#/$defs/ClaimStatus",
+          "default": "needs_review"
+        },
+        "notes": {
+          "default": "",
+          "title": "Notes",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        }
+      },
+      "required": [
+        "claim_id",
+        "statement"
+      ],
+      "title": "Claim",
+      "type": "object"
+    },
+    "ClaimStatus": {
+      "enum": [
+        "approved",
+        "rejected",
+        "needs_review"
+      ],
+      "title": "ClaimStatus",
+      "type": "string"
+    },
+    "ContentKind": {
+      "description": "What a single SENTENCE is. This is how we trace facts sentence by sentence.",
+      "enum": [
+        "factual",
+        "creative",
+        "transition"
+      ],
+      "title": "ContentKind",
+      "type": "string"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "description": "The sentence(s) on a source's page that best match a claim (a short quote only).",
+      "properties": {
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "quote": {
+          "maxLength": 400,
+          "title": "Quote",
+          "type": "string"
+        },
+        "score": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Score",
+          "type": "number"
+        }
+      },
+      "required": [
+        "source_id",
+        "quote",
+        "score"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "FactCheck": {
+      "additionalProperties": false,
+      "properties": {
+        "approved": {
+          "default": false,
+          "title": "Approved",
+          "type": "boolean"
+        },
+        "issues": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Issues",
+          "type": "array"
+        }
+      },
+      "title": "FactCheck",
+      "type": "object"
+    },
+    "Importance": {
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "title": "Importance",
+      "type": "string"
+    },
+    "LinkStatus": {
+      "description": "What happened when Python opened the source's URL (studio/sources.py).",
+      "enum": [
+        "not_checked",
+        "ok",
+        "broken",
+        "blocked",
+        "error",
+        "mock"
+      ],
+      "title": "LinkStatus",
+      "type": "string"
+    },
+    "Metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "topic": {
+          "minLength": 1,
+          "title": "Topic",
+          "type": "string"
+        },
+        "category": {
+          "$ref": "#/$defs/Category",
+          "default": "other"
+        },
+        "story_angle": {
+          "default": "",
+          "title": "Story Angle",
+          "type": "string"
+        },
+        "series": {
+          "default": "",
+          "title": "Series",
+          "type": "string"
+        },
+        "language": {
+          "default": "en",
+          "title": "Language",
+          "type": "string"
+        },
+        "target_audience": {
+          "default": "general_adult",
+          "title": "Target Audience",
+          "type": "string"
+        },
+        "target_duration_sec": {
+          "default": 45,
+          "exclusiveMinimum": 0,
+          "title": "Target Duration Sec",
+          "type": "integer"
+        },
+        "tone": {
+          "default": "curious_cinematic",
+          "title": "Tone",
+          "type": "string"
+        },
+        "hook_style": {
+          "default": "",
+          "title": "Hook Style",
+          "type": "string"
+        },
+        "originality_note": {
+          "default": "",
+          "title": "Originality Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "topic"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    },
+    "Publication": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "default": "",
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "default": "",
+          "title": "Description",
+          "type": "string"
+        },
+        "hashtags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Hashtags",
+          "type": "array"
+        },
+        "platforms": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Platforms",
+          "type": "array"
+        },
+        "ai_disclosure": {
+          "default": true,
+          "title": "Ai Disclosure",
+          "type": "boolean"
+        },
+        "published_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Published At"
+        },
+        "urls": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Urls",
+          "type": "array"
+        },
+        "schedule": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Schedule",
+          "type": "object"
+        },
+        "captions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Captions",
+          "type": "object"
+        },
+        "live_at": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Live At",
+          "type": "object"
+        }
+      },
+      "title": "Publication",
+      "type": "object"
+    },
+    "QAResult": {
+      "additionalProperties": false,
+      "properties": {
+        "deterministic": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Deterministic",
+          "type": "array"
+        },
+        "ai_checks": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Ai Checks",
+          "type": "array"
+        },
+        "approved": {
+          "default": false,
+          "title": "Approved",
+          "type": "boolean"
+        },
+        "issues": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Issues",
+          "type": "array"
+        }
+      },
+      "title": "QAResult",
+      "type": "object"
+    },
+    "Rejection": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "from_status": {
+          "$ref": "#/$defs/Status"
+        },
+        "rejected_at": {
+          "title": "Rejected At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reason",
+        "from_status",
+        "rejected_at"
+      ],
+      "title": "Rejection",
+      "type": "object"
+    },
+    "Reliability": {
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "title": "Reliability",
+      "type": "string"
+    },
+    "Research": {
+      "additionalProperties": false,
+      "properties": {
+        "claims": {
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Claims",
+          "type": "array"
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/Source"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "open_questions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Open Questions",
+          "type": "array"
+        }
+      },
+      "title": "Research",
+      "type": "object"
+    },
+    "Script": {
+      "additionalProperties": false,
+      "properties": {
+        "hook": {
+          "default": "",
+          "title": "Hook",
+          "type": "string"
+        },
+        "segments": {
+          "items": {
+            "$ref": "#/$defs/Segment"
+          },
+          "title": "Segments",
+          "type": "array"
+        }
+      },
+      "title": "Script",
+      "type": "object"
+    },
+    "Segment": {
+      "additionalProperties": false,
+      "properties": {
+        "segment_id": {
+          "minLength": 1,
+          "title": "Segment Id",
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/$defs/SegmentRole"
+        },
+        "sentences": {
+          "items": {
+            "$ref": "#/$defs/Sentence"
+          },
+          "title": "Sentences",
+          "type": "array"
+        },
+        "duration_sec": {
+          "minimum": 0.5,
+          "title": "Duration Sec",
+          "type": "number"
+        },
+        "visual_intent": {
+          "default": "",
+          "title": "Visual Intent",
+          "type": "string"
+        },
+        "emotion": {
+          "default": "",
+          "title": "Emotion",
+          "type": "string"
+        }
+      },
+      "required": [
+        "segment_id",
+        "role",
+        "duration_sec"
+      ],
+      "title": "Segment",
+      "type": "object"
+    },
+    "SegmentRole": {
+      "description": "Structural role of a segment in the story.",
+      "enum": [
+        "hook",
+        "setup",
+        "development",
+        "payoff",
+        "ending"
+      ],
+      "title": "SegmentRole",
+      "type": "string"
+    },
+    "Sentence": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ContentKind"
+        },
+        "claim_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Claim Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "text",
+        "kind"
+      ],
+      "title": "Sentence",
+      "type": "object"
+    },
+    "Shot": {
+      "additionalProperties": false,
+      "properties": {
+        "shot_id": {
+          "minLength": 1,
+          "title": "Shot Id",
+          "type": "string"
+        },
+        "duration_sec": {
+          "minimum": 0.5,
+          "title": "Duration Sec",
+          "type": "number"
+        },
+        "segment_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Segment Ids",
+          "type": "array"
+        },
+        "purpose": {
+          "default": "",
+          "title": "Purpose",
+          "type": "string"
+        },
+        "location": {
+          "default": "",
+          "title": "Location",
+          "type": "string"
+        },
+        "characters": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Characters",
+          "type": "array"
+        },
+        "action": {
+          "default": "",
+          "title": "Action",
+          "type": "string"
+        },
+        "camera": {
+          "default": "",
+          "title": "Camera",
+          "type": "string"
+        },
+        "visual_style": {
+          "default": "channel_style_v1",
+          "title": "Visual Style",
+          "type": "string"
+        },
+        "continuity_keys": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Continuity Keys",
+          "type": "array"
+        },
+        "generation_prompt": {
+          "default": "",
+          "title": "Generation Prompt",
+          "type": "string"
+        },
+        "asset_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Asset Path"
+        },
+        "status": {
+          "$ref": "#/$defs/ShotStatus",
+          "default": "planned"
+        }
+      },
+      "required": [
+        "shot_id",
+        "duration_sec"
+      ],
+      "title": "Shot",
+      "type": "object"
+    },
+    "ShotStatus": {
+      "enum": [
+        "planned",
+        "generating",
+        "generated",
+        "failed",
+        "approved"
+      ],
+      "title": "ShotStatus",
+      "type": "string"
+    },
+    "Source": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "minLength": 1,
+          "title": "Source Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "publisher": {
+          "minLength": 1,
+          "title": "Publisher",
+          "type": "string"
+        },
+        "url": {
+          "pattern": "^https?://\\S+$",
+          "title": "Url",
+          "type": "string"
+        },
+        "published_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Published Date"
+        },
+        "accessed_date": {
+          "title": "Accessed Date",
+          "type": "string"
+        },
+        "source_type": {
+          "$ref": "#/$defs/SourceType",
+          "default": "other"
+        },
+        "reliability": {
+          "$ref": "#/$defs/Reliability",
+          "default": "medium"
+        },
+        "evidence_summary": {
+          "default": "",
+          "title": "Evidence Summary",
+          "type": "string"
+        },
+        "link_status": {
+          "$ref": "#/$defs/LinkStatus",
+          "default": "not_checked"
+        },
+        "checked_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Checked At"
+        },
+        "final_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Final Url"
+        },
+        "page_title": {
+          "default": "",
+          "title": "Page Title",
+          "type": "string"
+        },
+        "link_note": {
+          "default": "",
+          "title": "Link Note",
+          "type": "string"
+        },
+        "verified_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verified By"
+        },
+        "verified_note": {
+          "default": "",
+          "title": "Verified Note",
+          "type": "string"
+        },
+        "declined_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Declined By"
+        },
+        "declined_note": {
+          "default": "",
+          "title": "Declined Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "title",
+        "publisher",
+        "url",
+        "accessed_date"
+      ],
+      "title": "Source",
+      "type": "object"
+    },
+    "SourceType": {
+      "enum": [
+        "museum",
+        "government",
+        "university",
+        "primary",
+        "reputable_media",
+        "other"
+      ],
+      "title": "SourceType",
+      "type": "string"
+    },
+    "Status": {
+      "enum": [
+        "IDEA",
+        "RESEARCH",
+        "FACT_CHECK",
+        "SCRIPT",
+        "STORYBOARD",
+        "PRODUCTION",
+        "QA",
+        "HUMAN_REVIEW",
+        "APPROVED",
+        "SCHEDULED",
+        "PUBLISHED",
+        "REJECTED"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "Storyboard": {
+      "additionalProperties": false,
+      "properties": {
+        "shots": {
+          "items": {
+            "$ref": "#/$defs/Shot"
+          },
+          "title": "Shots",
+          "type": "array"
+        }
+      },
+      "title": "Storyboard",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "episode_id": {
+      "minLength": 1,
+      "title": "Episode Id",
+      "type": "string"
+    },
+    "channel_id": {
+      "default": "main",
+      "title": "Channel Id",
+      "type": "string"
+    },
+    "version": {
+      "default": 1,
+      "minimum": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "status": {
+      "$ref": "#/$defs/Status",
+      "default": "IDEA"
+    },
+    "created_at": {
+      "title": "Created At",
+      "type": "string"
+    },
+    "updated_at": {
+      "title": "Updated At",
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "research": {
+      "$ref": "#/$defs/Research"
+    },
+    "fact_check": {
+      "$ref": "#/$defs/FactCheck"
+    },
+    "script": {
+      "$ref": "#/$defs/Script"
+    },
+    "storyboard": {
+      "$ref": "#/$defs/Storyboard"
+    },
+    "assets": {
+      "items": {
+        "$ref": "#/$defs/Asset"
+      },
+      "title": "Assets",
+      "type": "array"
+    },
+    "qa": {
+      "$ref": "#/$defs/QAResult"
+    },
+    "publication": {
+      "$ref": "#/$defs/Publication"
+    },
+    "rejection": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Rejection"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "episode_id",
+    "metadata"
+  ],
+  "title": "Episode",
+  "type": "object"
+}

@@ -1,0 +1,53 @@
+# Studio settings. Safe to commit (no secrets here).
+data_dir: data              # database, assets, logs live here (git-ignored)
+default_channel_id: main
+log_level: INFO
+auto_backup_keep: 14        # once a day the app copies the database to data/backups/auto; keep this many (0 = off)
+
+# Video rules (configurable, enforced by Python - not by AI)
+min_duration_sec: 30
+max_duration_sec: 55
+duration_tolerance_sec: 3   # shot lengths must add up to narration length +/- this
+
+# Fact rules
+high_importance_min_sources: 2   # high-importance claims need this many DIFFERENT publishers
+
+# Idea rules
+min_story_angle_chars: 10   # an idea needs a story angle this long before research (0 = off)
+
+# Video rules
+subtitles_required: true    # a video needs subtitles before QA
+hook_overlay_sec: 3         # the hook as big text at the top for the first seconds (0 = off); made with the subtitles
+shots_target: 12            # pictures per video (one every ~3.5 s keeps it lively)
+shots_max: 12               # never more: 6 Adobe Firefly + 6 ChatGPT a day
+
+# New episodes (old ones keep theirs). Why these values: docs/STRATEGY.md
+default_category: food      # the channel's focus
+target_duration_sec: 35     # what the scriptwriter aims for; short videos are watched to the end more often
+hook_max_words: 14          # a longer first line gets a warning (0 = off)
+
+# Picture style: added to every image prompt of NEW storyboards (old episodes keep theirs).
+# appetizing_v1 makes the food the hero (docs/STRATEGY.md). Analytics -> compare by "Picture style"
+# shows which look your viewers stay for. To go back to the storybook look, swap in these two lines:
+#   visual_style_name: storybook_v1
+#   visual_style: "Warm storybook illustration, simplified rounded shapes, soft outlines, warm golden palette, gentle textured shading, cozy light. Stylized, not a children's cartoon, not photorealistic. No text on screen."
+visual_style_name: appetizing_v1
+visual_style: "Rich painterly food illustration, like a painting in a high-end food magazine: the food in sharp focus with glistening, appetizing textures, warm natural light from the side, deep warm colours, soft painterly background with period details. Visible brushwork, clearly a painting, not a photo. People only as hands, silhouettes or seen from behind. No text on screen."
+
+# Originality gate thresholds (0 to 1). Raise a number to make that check less sensitive.
+originality_title_near_dup: 0.85   # near-identical titles -> suggest block
+originality_script_near_dup: 0.6   # reworded copies of a script -> suggest block
+originality_topic_overlap: 0.5     # topics this alike -> look closer
+originality_topic_near_dup: 0.8    # same topic AND same angle -> suggest block
+originality_topic_contained: 1.0   # share of the SHORTER topic's words found in the other (1 = all)
+originality_contained_block_words: 3  # a contained topic this many words long -> suggest block
+                                      # (shorter, e.g. "Penicillin" -> review)
+# Words ignored when comparing titles/topics: series boilerplate that says nothing about the subject.
+originality_ignore_words: [accidental, accident, invention, invented]
+originality_angle_similar: 0.4     # angles BELOW this count as clearly different
+originality_angle_review: 0.6      # similar angle on a different topic -> just a note
+originality_claim_review: 0.3      # share of reused facts that needs your review
+originality_claim_block: 0.7       # share of reused facts that suggests a block
+originality_source_review: 0.6     # share of reused source links that needs review
+originality_semantic_review: 0.8   # AI similarity score (when an AI judge is plugged in)
+originality_include_rejected: false  # compare against rejected ideas too?

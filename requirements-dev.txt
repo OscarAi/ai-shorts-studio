@@ -1,0 +1,7 @@
+# Developer tools (not needed to run the app). Install: .venv\Scripts\python -m pip install -r requirements-dev.txt
+-r requirements-lock.txt
+ruff==0.17.0        # code checks:          .venv\Scripts\python -m ruff check .
+pip-audit==2.10.1   # known vulnerabilities: .venv\Scripts\python -m pip_audit -r requirements-lock.txt
+pytest-xdist==3.8.0 # run the tests on all CPU cores: .venv\Scripts\python -m pytest -n auto
+mypy==2.4.0         # type checks:          .venv\Scripts\python -m mypy studio
+types-PyYAML==6.0.12.20260906

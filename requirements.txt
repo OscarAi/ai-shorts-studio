@@ -1,0 +1,6 @@
+pydantic>=2.7,<3
+pyyaml>=6.0
+pytest>=8.0
+streamlit>=1.50,<2
+kokoro-onnx>=0.6,<1   # built-in narration (Kokoro-82M, Apache-2.0)
+faster-whisper>=1.1,<2   # subtitle timing (MIT); model downloaded on first use

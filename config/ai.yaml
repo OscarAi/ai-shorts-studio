@@ -1,0 +1,62 @@
+# Free AI services the app can ask (Research, Fact check, Script, Storyboard).
+# They are tried in this order: when one is busy or out of free requests, the next is used.
+# Keys live ONLY in the .env file (git-ignored), never here. Facts checked 2026-10-14;
+# free tiers change, so look at each service's page now and then.
+max_repairs: 2          # how often the app may send an answer back to be fixed
+timeout_sec: 60         # how long to wait for one answer (then the next model is tried)
+max_wait_sec: 20        # a "too many requests this minute" answer is waited out once, if short
+max_requests_per_run: 8 # one click on "Run with AI" never sends more (fallbacks + repairs included)
+max_seconds_per_run: 180  # ... and never takes longer: a hanging service is given up on
+max_output_tokens: 8192 # ceiling on every answer's length (a storyboard needs ~3000)
+
+# Protection against costs. The app counts every request it sends (also failed ones and
+# connection tests) and stops asking a service when its daily_limit is reached, and all of
+# them at daily_limit_total. One video needs about 6-10 requests.
+daily_limit_total: 150
+allow_paid: false       # true would allow paid models (e.g. OpenRouter ids without ":free")
+
+providers:
+  - name: Gemini
+    base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+    key_env: GEMINI_API_KEY
+    # first that works is used; checked with the owner's key 2026-10-14 (2.5-flash is closed to
+    # new users; the bigger ones are often 'high demand' on the free tier, lite answers fast)
+    models: [gemini-3.8-flash, gemini-flash-latest, gemini-flash-lite-latest]
+    json_mode: true
+    structured_outputs: true   # the exact answer shape (falls back to JSON mode if refused)
+    daily_limit: 100
+    signup_url: https://aistudio.google.com/apikey
+    terms_url: https://ai.google.dev/gemini-api/terms
+    data_note: >-
+      Free tier: Google may use prompts and answers to improve its products, and people may
+      review them. Fine for public facts and scripts; never send private information. Do not
+      link a billing account (that changes the terms and can cost money).
+    checked: 2026-10-14
+
+  - name: Groq
+    base_url: https://api.groq.com/openai/v1/
+    key_env: GROQ_API_KEY
+    models: [openai/gpt-oss-120b, qwen/qwen3.8-27b]   # what the owner's key offers (2026-10-14)
+    json_mode: true
+    structured_outputs: true
+    daily_limit: 150
+    signup_url: https://console.groq.com/keys
+    terms_url: https://console.groq.com/docs/legal
+    data_note: >-
+      Free tier with daily limits per model; Groq says it does not train on your prompts.
+      Check its terms before relying on it for commercial work.
+    checked: 2026-10-14
+
+  - name: OpenRouter
+    base_url: https://openrouter.ai/api/v1/
+    key_env: OPENROUTER_API_KEY
+    models: ["meta-llama/llama-3.3-70b-instruct:free"]
+    json_mode: false
+    daily_limit: 40
+    free_model_suffix: ":free"   # only free models (OpenRouter bills the others if you add credit)
+    signup_url: https://openrouter.ai/keys
+    terms_url: https://openrouter.ai/terms
+    data_note: >-
+      Free models: about 50 requests a day; which models are free changes often. Each model's
+      own provider may log prompts.
+    checked: 2026-10-14

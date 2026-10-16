@@ -1,0 +1,38 @@
+# Free tools the studio links to, and what their terms allow.
+# Terms change: re-check each tool's official terms and update "checked" (the app warns after 180 days).
+# The license_note is saved with every file made with the tool, so your records show what you relied on.
+
+image_tools:
+  - name: Adobe Firefly
+    url: https://firefly.adobe.com/
+    license_note: "Adobe Firefly. Adobe Generative AI Product Specific Terms (effective 23 Apr 2026): output is my content, no commercial restriction; watermarks/Content Credentials kept."
+    terms_url: https://www.adobe.com/go/adobe-gen-ai-addl-terms
+    tip: "Choose the Art content type (not Photo) if Firefly offers it, and keep the style sentence at the end of the prompt."
+    daily_limit: 6   # what your accounts allow per day
+    checked: 2026-10-12
+  - name: ChatGPT
+    url: https://chatgpt.com/
+    license_note: "ChatGPT (OpenAI). OpenAI Terms of Use: I own the output (OpenAI assigns its rights to me)."
+    terms_url: https://openai.com/policies/terms-of-use/
+    tip: "Paste the prompt as is. If a picture looks too photographic, reply: more painterly, visible brushwork, warmer light, less like a photo. If the food looks dull: closer, juicier, light from the side."
+    daily_limit: 6
+    checked: 2026-10-12
+  - name: My own photo or drawing
+    license_note: "My own work."
+
+voice_tools:
+  - name: Kokoro (built in)
+    license_note: "Kokoro-82M (Apache-2.0 model), generated locally with kokoro-onnx (MIT)."
+    terms_url: https://huggingface.co/hexgrad/Kokoro-82M
+    checked: 2026-10-12
+  - name: Kokoro web demo
+    url: https://huggingface.co/spaces/hexgrad/Kokoro-TTS
+    license_note: "Kokoro-82M (Apache-2.0 model) via the model author's web demo."
+    terms_url: https://huggingface.co/hexgrad/Kokoro-82M
+    checked: 2026-10-12
+  - name: My own voice
+    license_note: "My own recording."
+
+# Checked and NOT listed on purpose (2026-10-12):
+# - Bing Image Creator / Microsoft Designer: terms grant no commercial use ("for entertainment purposes").
+# - ElevenLabs free plan: commercial license only on paid plans.

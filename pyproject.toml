@@ -1,0 +1,34 @@
+# Tool settings only (the app is not a package).
+#   code checks:  .venv\Scripts\python -m ruff check .
+#   tests:        .venv\Scripts\python -m pytest -n auto   (-n auto: all CPU cores; needs requirements-dev.txt)
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+extend-exclude = [".venv", "data"]
+
+[tool.ruff.lint]
+# E/W style, F real mistakes, I import order, B likely bugs, UP modern Python,
+# SIM/PIE/C4/PERF/FLY/FURB simpler and faster idioms, RUF ruff's own checks,
+# PLW pylint warnings (e.g. a loop variable overwritten), PLR1714 merged comparisons.
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "PIE", "C4", "PERF", "FLY", "FURB", "RUF", "PLW",
+          "PLR1714"]
+ignore = [
+    "E501",     # long lines: mostly user-facing sentences, clearer unbroken
+    "RUF001",   # "ambiguous" characters such as ’ and – are wanted in user-facing text
+    "RUF002",
+    "RUF005",   # [*a, b] vs a + [b]: both read fine
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["studio", "ui"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.mypy]
+# Type checks for the core package: .venv\Scripts\python -m mypy studio
+python_version = "3.13"
+plugins = ["pydantic.mypy"]
+ignore_missing_imports = true
+warn_unused_ignores = true
